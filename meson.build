@@ -3,9 +3,10 @@ project('my_vala_project', 'vala', 'c')
 vapi_dir = join_paths(meson.project_source_root(), 'vapi')
 add_project_arguments(['--vapidir', vapi_dir], language : 'vala')
 
-vala_sources = [
-    'src/main.vala'
-]
+vala_sources = run_command(
+    'find', 'src', '-name', '*.vala',
+    check: true
+).stdout().strip().split('\n')
 
 executable(
     'my_app',
