@@ -13,6 +13,8 @@ executable(
     dependencies: [
         dependency('glib-2.0'),
         dependency('gobject-2.0'),
+        dependency('sdl3'),
         meson.get_compiler('vala').find_library('sdl3', dirs : vapi_dir),
+        meson.get_compiler('c').find_library('m'),
     ]
 )
