@@ -57,17 +57,17 @@ namespace Script {
         }
     }
     
-    public abstract interface Command {}
+    public interface Command : Object {}
 
-    public class PlayerBlock : Command {}
+    public class PlayerBlock : Object, Command {}
 
-    public class PlayerUnblock : Command {}
+    public class PlayerUnblock : Object, Command {}
 
-    public class PlayerFall : Command {}
+    public class PlayerFall : Object, Command {}
 
-    public class PlayerGetup : Command {}
+    public class PlayerGetup : Object, Command {}
     
-    public class PlayerHurt : Command {
+    public class PlayerHurt : Object, Command {
         public int health;
 
         public PlayerHurt(int health) {
@@ -75,7 +75,7 @@ namespace Script {
         }
     }
 
-    public class PlayerMove : Command {
+    public class PlayerMove : Object, Command {
         public int x;
         public int y;
 
@@ -85,7 +85,7 @@ namespace Script {
         }
     }
 
-    public class NpcMove: Command {
+    public class NpcMove: Object, Command {
         public int x;
         public int y;
 
@@ -95,7 +95,7 @@ namespace Script {
         }
     }
 
-    public class ShowDialog : Command {
+    public class ShowDialog : Object, Command {
         public ArrayList<string> messages;
 
         public ShowDialog(ArrayList<string> messages) {
@@ -103,7 +103,7 @@ namespace Script {
         }
     }
 
-    public class ShowDialogChr : Command {
+    public class ShowDialogChr : Object, Command {
         public string characterId;
         public string message;
 
@@ -113,7 +113,7 @@ namespace Script {
         }
     }
 
-    public class Wait : Command {
+    public class Wait : Object, Command {
         public int millis;
 
         public Wait(int millis) {
@@ -121,7 +121,7 @@ namespace Script {
         }
     }
 
-    public class GiveItem : Command {
+    public class GiveItem : Object, Command {
         public string itemId;
 
         public GiveItem(string itemId) {
@@ -129,7 +129,7 @@ namespace Script {
         }
     }
 
-    public class GotoLevel : Command {
+    public class GotoLevel : Object, Command {
         public string levelId;
 
         public GotoLevel(string levelId) {
@@ -137,7 +137,7 @@ namespace Script {
         }
     }
 
-    public class GotoLevelWith : Command {
+    public class GotoLevelWith : Object, Command {
         public FadeEffect fade;
         public string levelId;
 
@@ -147,7 +147,7 @@ namespace Script {
         }
     }
 
-    public class JustEffect : Command {
+    public class JustEffect : Object, Command {
         public FadeEffect effect;
 
         public JustEffect(FadeEffect effect) {
@@ -155,7 +155,7 @@ namespace Script {
         }
     }
     
-    public class SetBg : Command {
+    public class SetBg : Object, Command {
         public Background color;
 
         public SetBg(Background color) {
