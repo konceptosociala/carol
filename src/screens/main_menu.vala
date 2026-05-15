@@ -75,10 +75,14 @@ public enum MainMenuButton {
 
     public string toString() {
         switch (this) {
-            case PLAY:      return "Play";
-            case OPTIONS:   return "Options";
-            case EXIT:      return "Exit";
-            default:        return "";
+            case PLAY:
+                return "Play";
+            case OPTIONS:
+                return "Options";
+            case EXIT:
+                return "Exit";
+            default:
+                assert_not_reached();
         }
     }
 }
