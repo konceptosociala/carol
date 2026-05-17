@@ -1,5 +1,15 @@
-namespace Utils {
+namespace Utils.Math {
     
+    public struct Vector2 {
+        public float x;
+        public float y;
+
+        public Vector2(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     public struct BoundingBox {
         public Vector2 left_bottom;
         public Vector2 right_bottom;

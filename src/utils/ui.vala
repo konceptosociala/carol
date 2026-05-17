@@ -1,7 +1,9 @@
-using SDL.Render;
 using SDL.Pixels;
 
-namespace Engine {
+using Carol.Screens;
+using Carol.Utils.Render;
+
+namespace Carol.Utils {
     
     public class UIManager {
         private const float SCALE = 4.0f;
@@ -19,22 +21,22 @@ namespace Engine {
             MainMenuButton self,
             MainMenuButton current
         ) {
-            set_render_scale(renderer, SCALE, SCALE);
+            SDL.Render.set_render_scale(renderer.sdl, SCALE, SCALE);
 
             if (self == current) {
-                set_render_draw_color(this.renderer, 255, 255, 255, ALPHA_OPAQUE);
+                SDL.Render.set_render_draw_color(renderer.sdl, 255, 255, 255, ALPHA_OPAQUE);
             } else {
-                set_render_draw_color(this.renderer, 128, 128, 128, ALPHA_OPAQUE);
+                SDL.Render.set_render_draw_color(renderer.sdl, 128, 128, 128, ALPHA_OPAQUE);
             }
 
-            render_debug_text(
-                this.renderer, 
+            SDL.Render.render_debug_text(
+                renderer.sdl, 
                 screenWidth / 2 / (int) SCALE - 50, 
                 screenHeight / 2 / (int) SCALE + centerOffset, 
                 self.toString()
             );
 
-            set_render_scale(renderer, 1.0f, 1.0f);
+            SDL.Render.set_render_scale(renderer.sdl, 1.0f, 1.0f);
         }
     }
 }

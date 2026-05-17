@@ -1,0 +1,32 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "/home/ks/doc/projects/carol_legacy/assets/tmx/test0100.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "/home/ks/doc/projects/carol_legacy/assets/tmx/test0100.tmx": {
+            "scale": 4.4035,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 565.5728397865335,
+                "y": 308.9587827864199
+            }
+        },
+        "/home/ks/doc/projects/carol_legacy/assets/tmx/tiles/magecity.tsx": {
+            "scaleInDock": 1
+        }
+    },
+    "last.imagePath": "/home/nutov2/doc/ks/proj/carol/assets/tmx/tiles",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "/home/ks/doc/projects/carol_legacy/assets/tmx/test0100.tmx"
+    ],
+    "project": "",
+    "recentFiles": [
+        "/home/ks/doc/projects/carol_legacy/assets/tmx/test0100.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}

@@ -1,0 +1,11 @@
+# Start dialog
+
+SHOW_DIALOG "Test dialog"
+SHOW_DIALOG char1 "Hello, how are you?"
+WAIT 500
+SHOW_DIALOG char2 "I'm fine, thank you!"
+PLAYER_FALL
+WAIT 500
+PLAYER_GETUP
+GIVE_ITEM test_item
+GOTO_LEVEL test02 WITH FADE_BLACK

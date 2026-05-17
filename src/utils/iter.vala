@@ -1,6 +1,6 @@
 using Gee;
 
-namespace Utils {
+namespace Utils.Iter {
     
     public T[] collect<T>(Iterator<T> iter) {
         var tmp = new ArrayList<T>();

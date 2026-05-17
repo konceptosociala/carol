@@ -1,0 +1,6 @@
+# Yellow Town 01
+
+SET_BG      BLACK
+WAIT        1500
+SHOW_DIALOG "Hi, my dear Julia." "I haven't seen you in a while... since when I moved away from Yellow Town."
+SHOW_DIALOG "No news from you, are you all right there?"

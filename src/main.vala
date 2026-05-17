@@ -5,10 +5,11 @@ using SDL.Video;
 using SDL.Render;
 using SDL.Events;
 
-using Engine;
+using Carol.Utils;
+using Carol.Screens;
 
 public class CarolGame : Game {
-    private UIManager ui;
+    public UIManager ui { get; set; }
 
     public CarolGame() {
         base("Game", 640, 480, WindowFlags.FULLSCREEN);
@@ -16,7 +17,7 @@ public class CarolGame : Game {
 
     protected override void init() {
         ui = new UIManager(renderer);
-        set_screen(new MainMenuScreen(ui, window, this));
+        set_screen(new MainMenuScreen(this));
     }
 
     public static int main(string[] args) {
