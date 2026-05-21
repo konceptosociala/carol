@@ -1,12 +1,15 @@
 using Carol.Utils.Assets;
 using Carol.Utils.Render;
+using Carol.Utils.Math;
 using Carol.Utils;
+using Carol.Character.Animation;
 
 namespace Carol.Screens {
 
     public class GameScreen : Screen {
         private Renderer renderer;
         private Texture texture;
+        private float current_tile = 0.0f;
 
         public GameScreen(Renderer renderer) {
             this.renderer = renderer;
@@ -14,21 +17,31 @@ namespace Carol.Screens {
 
         public override void init() {
             try {
-                texture = new Texture(renderer, "anim/carol.png");
+                texture = new Texture.with_tiles(
+                    renderer, 
+                    "anim/carol.png", 
+                    64, 
+                    64,
+                    TextureFilter.NEAREST
+                );
             } catch (AssetError e) {
                 Debug.error(e.message);
             }
         }
 
         public override void render(float dt) {
-            float scale = ((float) (((int) (dt % 1000)) - 500) / 500.0f);
-            var dst_rect = SDL.Rect.FRect();
+            current_tile = (current_tile + dt * 4) % 9;
 
-            dst_rect.x = 0.0f;
-            dst_rect.y = 0.0f;
-            dst_rect.w = (float) texture.width *2;
-            dst_rect.h = (float) texture.height *2;
-            SDL.Render.render_texture(renderer.sdl, texture.inner, null, dst_rect);
+            var anim = AnimationId.WALK_DOWN;
+            var tiles = anim.get_tiles();
+
+            print(current_tile.to_string()+"\n");
+
+            try {
+                texture.render(renderer, Vector2(0.0f, 0.0f), 2.0f, tiles[(int) current_tile]);
+            } catch (AssetError e) {
+                Debug.error(e.message);
+            }
         }
     }
 }

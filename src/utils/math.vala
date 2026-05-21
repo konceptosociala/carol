@@ -1,4 +1,4 @@
-namespace Utils.Math {
+namespace Carol.Utils.Math {
     
     public struct Vector2 {
         public float x;
