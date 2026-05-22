@@ -4,6 +4,8 @@ namespace Carol.Utils.Math {
         public float x;
         public float y;
 
+        public const Vector2 ZERO = { 0.0f, 0.0f };
+
         public Vector2(float x, float y) {
             this.x = x;
             this.y = y;

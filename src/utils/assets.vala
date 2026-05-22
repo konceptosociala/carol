@@ -23,7 +23,7 @@ namespace Carol.Utils.Assets {
     }
 
     public class Texture {
-        public SDL.Render.Texture inner { get; private set; }
+        private SDL.Render.Texture inner;
         public int width { get; private set; }
         public int height { get; private set; }
         public int? tile_width { get; private set; }
@@ -118,6 +118,14 @@ namespace Carol.Utils.Assets {
         public TileCoord(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        public static TileCoord[] getRow(int row_index, int count) {
+            TileCoord[] coords = new TileCoord[count];
+            for (int i = 0; i < count; i++) {
+                coords[i] = TileCoord(i, row_index);
+            }
+            return coords;
         }
     }
 
