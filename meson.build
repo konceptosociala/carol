@@ -3,6 +3,7 @@ project('my_vala_project', 'vala', 'c')
 vapi_dir = join_paths(meson.project_source_root(), 'vapi')
 add_project_arguments(['--vapidir', vapi_dir], language : 'vala')
 add_project_arguments(['--enable-experimental-non-null'], language: 'vala')
+add_project_arguments(['--enable-experimental'], language: 'vala')
 
 vala_sources = run_command(
     'find', 'src', '-name', '*.vala',
