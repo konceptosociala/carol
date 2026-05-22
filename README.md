@@ -9,5 +9,5 @@ meson compile -C build
 ```
 
 ```sh
-./build/my_app
+./build/carol
 ```

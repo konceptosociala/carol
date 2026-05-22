@@ -1,4 +1,4 @@
-project('my_vala_project', 'vala', 'c')
+project('carol', 'vala', 'c')
 
 vapi_dir = join_paths(meson.project_source_root(), 'vapi')
 add_project_arguments(['--vapidir', vapi_dir], language : 'vala')
@@ -11,7 +11,7 @@ vala_sources = run_command(
 ).stdout().strip().split('\n')
 
 executable(
-    'my_app',
+    'carol',
     vala_sources,
     dependencies: [
         dependency('glib-2.0'),
