@@ -1,5 +1,6 @@
 using Carol.Utils.Render;
 using Carol.Utils.Assets;
+using Carol.Utils.Math;
 
 namespace Carol.Utils.Maps {  
 
@@ -59,15 +60,75 @@ namespace Carol.Utils.Maps {
             map = (owned) maybe_map;
         }
 
-        public bool is_solid(float x, float y) {
-            return false;
+        public bool is_solid(Vector2 pos, string layer_name) {
+            unowned Tmx.Layer? head_layer = ((!) map).ly_head;
+            bool found = false;
+            while (head_layer != null) {
+                unowned var head = (!) head_layer;
+                if (head.name != null && ((!) head.name) == layer_name) {
+                    found = true;
+                    break;
+                }
+                head_layer = head.next;
+            }
+
+            if (!found) {
+                Debug.error("Layer `"+layer_name+"` not found");
+                return false;
+            }
+
+            uint tile_x = (uint)(pos.x / (((!) map).tile_width * scale));
+            uint tile_y = (uint)(pos.y / (((!) map).tile_height * scale));
+
+            if (tile_x >= ((!) map).width || tile_y >= ((!) map).height) {
+                return false;
+            }
+
+            uint gid = ((!) head_layer).content_gids[(tile_y * ((!) map).width) + tile_x] & Tmx.FLIP_BITS_REMOVAL;
+            return gid != 0 && ((!) map).tiles[gid] != null;
         }
 
-        public void render() {
+        public void render_collision(string layer_name) {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (is_solid(Vector2(x * tile_width * scale, y * tile_height * scale), layer_name)) {
+                        var rect = SDL.Rect.FRect() {
+                            x = x * tile_width * scale,
+                            y = y * tile_height * scale,
+                            w = tile_width * scale,
+                            h = tile_height * scale
+                        };
+                        SDL.Render.set_render_draw_color(renderer.sdl, 0, 0, 200, 255);
+                        SDL.Render.render_rect(renderer.sdl, rect);
+                    }
+                }
+            }
+        }
+
+        public void render_full() {
             set_background_color(((!) map).backgroundcolor);
             SDL.Render.render_clear(renderer.sdl);
 
             draw_all_layers(((!) map).ly_head);
+        }
+
+        public void render_layer(string layer_name) {
+            unowned Tmx.Layer? head_layer = ((!) map).ly_head;
+            bool found = false;
+            while (head_layer != null) {
+                unowned var head = (!) head_layer;
+                Debug.trace("Checking layer `"+(head.name != null ? (!) head.name : "unknown")+"`");
+                if (head.name != null && ((!) head.name) == layer_name) {
+                    found = true;
+                    draw_layer(head);
+                    break;
+                }
+                head_layer = head.next;
+            }
+
+            if (!found) {
+                Debug.error("Layer `"+layer_name+"` not found");
+            }
         }
 
         private void draw_all_layers(Tmx.Layer? head_layer) {

@@ -244,6 +244,25 @@ namespace Carol.Character.Player {
             }
         }
 
+        public void render_collision(Renderer renderer) {
+            BoundingBox hit_box = BoundingBox(
+                position.add_sep(HITBOX_OFFSET_X, HITBOX_OFFSET_Y), 
+                HITBOX_WIDTH, 
+                HITBOX_HEIGHT
+            );
+
+            SDL.Render.set_render_draw_color(renderer.sdl, 255, 0, 0, 255);
+            SDL.Render.render_rect(
+                renderer.sdl,
+                SDL.Rect.FRect() {
+                    x = hit_box.left_bottom.x,
+                    y = hit_box.left_bottom.y,
+                    w = HITBOX_WIDTH,
+                    h = HITBOX_HEIGHT
+                }
+            );
+        }
+
         public void on_event(Event e) {
             if (e.type == EventType.KEY_DOWN) {
                 switch (e.key.scancode) {

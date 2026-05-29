@@ -21,7 +21,7 @@ namespace Carol.Screens {
         public override void init() {
             try {
                 player = new Player(renderer);
-                map = new Maps.Map(renderer, "assets/tmx/yellow_town_01.tmx");
+                map = new Map(renderer, "assets/tmx/test0100.tmx");
                 map.scale = 2.0f;
             } catch (AssetError e) {
                 Debug.error(e.message);
@@ -29,7 +29,8 @@ namespace Carol.Screens {
         }
 
         public override void update(float dt) {
-            player.update(dt, (pos) => false);
+            player.update(dt, (pos) => map.is_solid(pos, "Collision"));
+            update_camera_pos();
         }
 
         public override void on_event(Event e) {
@@ -37,13 +38,20 @@ namespace Carol.Screens {
         }
 
         public override void render(float dt) {
-            map.render();
-            
+            map.render_layer("Background");
+            map.render_layer("Collision");
+
             try {
                 player.render(renderer, dt);
             } catch (AssetError e) {
                 Debug.error(e.message);
             }
+
+            map.render_layer("Upper");
+
+            // Debug
+            map.render_collision("Collision");
+            player.render_collision(renderer);
         }
 
         private void update_camera_pos() {

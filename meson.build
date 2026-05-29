@@ -5,6 +5,11 @@ add_project_arguments(['--vapidir', vapi_dir], language : 'vala')
 add_project_arguments(['--enable-experimental-non-null'], language: 'vala')
 add_project_arguments(['--enable-experimental'], language: 'vala')
 
+if get_option('buildtype') == 'debug'
+    add_project_arguments(['--define=DEBUG'], language: 'vala')
+    add_project_arguments(['-DDEBUG'], language: 'c')
+endif
+
 vala_sources = run_command(
     'find', 'src', '-name', '*.vala',
     check: true

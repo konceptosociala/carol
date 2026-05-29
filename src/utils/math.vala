@@ -54,4 +54,15 @@ namespace Carol.Utils.Math {
     public int mod(int a, int n) {
         return (a % n + n) % n;
     }
+
+    public struct Color {
+        uint8 r;
+        uint8 g;
+        uint8 b;
+        uint8 a;
+
+        public SDL.Pixels.Color to_sdl_color() {
+            return SDL.Pixels.Color() { r = r, g = g, b = b, a = a };
+        }
+    }
 }
