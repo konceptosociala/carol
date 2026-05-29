@@ -200,7 +200,7 @@ namespace Tmx {
 	[Compact]
 	public class Tile {
 		public uint id;
-		public Tileset? tileset;
+		public TileSet? tileset;
 		public uint ul_x;
 		public uint ul_y;
 		public uint width;
@@ -216,7 +216,7 @@ namespace Tmx {
 
 	[CCode (cname = "struct _tmx_ts", has_type_id = false)]
 	[Compact]
-	public class Tileset {
+	public class TileSet {
 		public unowned string? name;
 		public unowned string? class_type;
 		public uint tile_width;
@@ -241,7 +241,7 @@ namespace Tmx {
 		public int is_embedded;
 		public uint firstgid;
 		public unowned string? source;
-		public Tileset? tileset;
+		public TileSet? tileset;
 		public TilesetList? next;
 	}
 
@@ -399,6 +399,7 @@ namespace Tmx {
 	public void property_foreach (Properties hash, PropertyFunctor callback, void* userdata);
 
 	[CCode (cname = "tmx_col_bytes", has_type_id = false)]
+	[SimpleType]
 	public struct ColBytes {
 		public uint8 r;
 		public uint8 g;
@@ -407,6 +408,7 @@ namespace Tmx {
 	}
 
 	[CCode (cname = "tmx_col_floats", has_type_id = false)]
+	[SimpleType]
 	public struct ColFloats {
 		public float r;
 		public float g;

@@ -11,7 +11,7 @@ namespace Carol.Screens {
     public class GameScreen : Screen {
         private Renderer renderer;
         private Player player;
-        private Maps.Map? map;
+        private Map map;
         private Vector2 cameraPos;
 
         public GameScreen(Renderer renderer) {
@@ -22,19 +22,14 @@ namespace Carol.Screens {
             try {
                 player = new Player(renderer);
                 map = new Maps.Map(renderer, "assets/tmx/yellow_town_01.tmx");
+                map.scale = 2.0f;
             } catch (AssetError e) {
                 Debug.error(e.message);
-            } catch (Error e) {
-                Debug.error("Failed to load map");
             }
         }
 
         public override void update(float dt) {
-            if (map != null) {
-                player.update(dt, (pos) => ((!) map).is_solid(pos.x, pos.y));
-            } else {
-                player.update(dt, (pos) => false);
-            }
+            player.update(dt, (pos) => false);
         }
 
         public override void on_event(Event e) {
@@ -42,9 +37,7 @@ namespace Carol.Screens {
         }
 
         public override void render(float dt) {
-            if (map != null) {
-                ((!) map).render();
-            }
+            map.render();
             
             try {
                 player.render(renderer, dt);
@@ -54,7 +47,6 @@ namespace Carol.Screens {
         }
 
         private void update_camera_pos() {
-            if (map == null) return;
             var current_map = (!) map;
             
             Vector2 position = player.position;

@@ -40,7 +40,7 @@ executable(
         libxml2_dep,
         zlib_dep,
         meson.get_compiler('vala').find_library('sdl3', dirs : vapi_dir),
-        meson.get_compiler('vala').find_library('sdl3-image', dirs : vapi_dir),
+        # meson.get_compiler('vala').find_library('sdl3-image', dirs : vapi_dir),
         meson.get_compiler('vala').find_library('tmx', dirs : vapi_dir),
         meson.get_compiler('c').find_library('m'),
     ],

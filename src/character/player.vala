@@ -169,9 +169,7 @@ namespace Carol.Character.Player {
             bool is_moving = !velocity.is_zero();
 
             if (is_moving) {
-                print("RENDER: before pos:(%f,%f) vel:(%f,%f)\n", position.x, position.y, velocity.x, velocity.y);
                 position = position.add(velocity);
-                print("RENDER: after pos:(%f,%f)\n", position.x, position.y);
             }
 
             float aligned_x = Math.roundf(position.x);

@@ -6,19 +6,43 @@ namespace Carol.Utils.Maps {
     public class Map {
         private static Renderer static_renderer;
         private Renderer renderer;
-        private Tmx.Map map;
+        private Tmx.Map? map;
 
-        public uint width { get { return map.width; } }
-        public uint height { get { return map.height; } }
-        public uint tile_width { get { return map.tile_width; } }
-        public uint tile_height { get { return map.tile_height; } }
+        public float scale {
+            get; set;
+            default = 1.0f;
+        }
+        public uint width { get { return ((!) map).width; } }
+        public uint height { get { return ((!) map).height; } }
+        public uint tile_width { get { return ((!) map).tile_width; } }
+        public uint tile_height { get { return ((!) map).tile_height; } }
 
-        public Map(Renderer renderer, string path) throws Error {
+        public Map(
+            Renderer renderer, 
+            string path
+        ) throws AssetError {
             static_renderer = renderer;
-            this.renderer;
+            this.renderer = renderer;
             
             Tmx.img_load_func = (img_path) => {
-                return (void*) SDL.Image.load_texture(static_renderer.sdl, img_path);
+                SDL.Surface.Surface? surface = SDL.Surface.load_png(img_path);
+                if (surface == null) {
+                    return null;
+                }
+                SDL.Render.Texture? texture = SDL.Render.create_texture_from_surface(
+                    static_renderer.sdl, 
+                    (!) surface
+                );
+
+                if (texture != null) {
+                    SDL.Render.set_texture_scale_mode(
+                        (!) texture, 
+                        TextureFilter.NEAREST.to_scale_mode()
+                    );
+                }
+
+                SDL.Surface.destroy_surface((!) surface);
+                return (void*) texture;
             };
             Tmx.img_free_func = (texture) => {
                 if (texture != null) {
@@ -26,7 +50,13 @@ namespace Carol.Utils.Maps {
                 }
             };
 
-            map = new Tmx.Map(path);            
+            Tmx.Map? maybe_map = new Tmx.Map(path);         
+            
+            if (maybe_map == null) {
+                throw AssetError.invalid_tmx_map(path);
+            }
+            
+            map = (owned) maybe_map;
         }
 
         public bool is_solid(float x, float y) {
@@ -34,15 +64,15 @@ namespace Carol.Utils.Maps {
         }
 
         public void render() {
-            set_background_color(map.backgroundcolor);
+            set_background_color(((!) map).backgroundcolor);
             SDL.Render.render_clear(renderer.sdl);
 
-            draw_all_layers(map.ly_head);
+            draw_all_layers(((!) map).ly_head);
         }
 
         private void draw_all_layers(Tmx.Layer? head_layer) {
             while (head_layer != null) {
-                var head = (!) head_layer;
+                unowned var head = (!) head_layer;
                 if (head.visible) {
                     switch (head.type) {
                         case Tmx.LayerType.GROUP:
@@ -54,26 +84,107 @@ namespace Carol.Utils.Maps {
                             break;
 
                         case Tmx.LayerType.IMAGE:
-                            draw_image_layer(head.content_image);
+                            draw_image_layer((!) head.content_image);
                             break;
 
                         case Tmx.LayerType.LAYER:
                             draw_layer(head);
                             break;
+
+                        default: break;
                     }
                 }
                 head_layer = head.next;
             }
         }
 
+        private void draw_layer(Tmx.Layer head) {
+            ulong i, j;
+            uint gid, x, y, w, h, flags;
+            float op;
+            unowned Tmx.TileSet tile_set;
+            unowned Tmx.Image? image;
+            SDL.Render.Texture* texture;
+            op = (float) head.opacity;
+
+            for (i = 0; i < ((!) map).height; i++) {
+                for (j = 0; j < ((!) map).width; j++) {
+                    gid = head.content_gids[(i * ((!) map).width) + j] & Tmx.FLIP_BITS_REMOVAL;
+                    if (((!) map).tiles[gid] != null) {
+                        var tile = ((!) map).tiles[gid];
+                        tile_set = (!) tile->tileset;
+                        image = tile->image;
+                        x = tile->ul_x;
+                        y = tile->ul_y;
+                        w = tile_set.tile_width;
+                        h = tile_set.tile_height;
+
+                        if (image != null) {
+                            texture = ((!) image).resource_image;
+                        } else {
+                            texture = ((!) tile_set.image).resource_image;
+                        }
+                        flags = head.content_gids[(i * ((!) map).width) + j] & ~Tmx.FLIP_BITS_REMOVAL;
+
+                        draw_tile(
+                            texture, 
+                            x, y, 
+                            w, h, 
+                            (uint)(j * tile_set.tile_width), 
+                            (uint)(i * tile_set.tile_height), 
+                            op, 
+                            flags
+                        );
+                    }
+                }
+            }
+        }
+
+        void draw_tile(
+            SDL.Render.Texture* texture, 
+            uint sx, 
+            uint sy, 
+            uint sw, 
+            uint sh,
+            uint dx, 
+            uint dy, 
+            float opacity, 
+            uint flags
+        ) {
+            var src_rect = SDL.Rect.FRect();
+            var dst_rect = SDL.Rect.FRect();
+            src_rect.x = sx;
+            src_rect.y = sy;
+            src_rect.w = dst_rect.w = sw;
+            src_rect.h = dst_rect.h = sh;
+            dst_rect.x = dx * scale;
+            dst_rect.y = dy * scale;
+            dst_rect.w *= scale;
+            dst_rect.h *= scale;
+
+            SDL.Render.render_texture(
+                renderer.sdl,
+                texture,
+                src_rect,
+                dst_rect
+            );
+        }
+
+        private void draw_image_layer(Tmx.Image image) {
+            SDL.Rect.FRect dim = { x: 0, y: 0 };
+
+            SDL.Render.Texture texture = (SDL.Render.Texture) image.resource_image;
+            SDL.Render.render_texture(renderer.sdl, texture, null, dim);
+        }
+
         private void draw_objects(Tmx.ObjectGroup object_group) {
             set_background_color(object_group.color);
 
-            Tmx.Object? head_object = object_group.head;
-            SDL.Rect.FRect rect;
+            unowned Tmx.Object? head_object = object_group.head;
+            var rect = SDL.Rect.FRect();
 
             while (head_object != null) {
-                var head = (!) head_object;
+                unowned var head = (!) head_object;
 
                 if (head.visible) {
                     switch (head.obj_type) {
@@ -86,7 +197,7 @@ namespace Carol.Utils.Maps {
                             break;
                             
                         case Tmx.ObjType.POLYGON:
-                            var shape = (!) head.content_shape;
+                            unowned var shape = (!) head.content_shape;
                             draw_polygon(
                                 shape.points, 
                                 head.x, 
@@ -96,7 +207,7 @@ namespace Carol.Utils.Maps {
                             break;
 
                         case Tmx.ObjType.POLYLINE:
-                            var shape = (!) head.content_shape;
+                            unowned var shape = (!) head.content_shape;
                             draw_polyline(
                                 shape.points, 
                                 head.x, 
@@ -105,9 +216,7 @@ namespace Carol.Utils.Maps {
                             );
                             break;
 
-                        case Tmx.ObjType.ELLIPSE:
-                            // ¯\_(ツ)_/¯
-                            break;
+                        default: break;
                     }
                 }
                 head_object = head.next;

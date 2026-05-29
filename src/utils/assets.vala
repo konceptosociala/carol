@@ -132,7 +132,14 @@ namespace Carol.Utils.Assets {
     public errordomain AssetError {
         ASSET_NOT_EXIST,
         INVALID_PNG_TEXTURE,
-        TEXTURE_NOT_TILED;
+        TEXTURE_NOT_TILED,
+        INVALID_TMX_MAP;
+
+        public static AssetError invalid_tmx_map(string map_path) {
+            return new AssetError.INVALID_TMX_MAP(
+                "Invalid TMX map: \"%s\"".printf(map_path)
+            );
+        }
 
         public static AssetError asset_not_exist(string asset_path) {
             return new AssetError.ASSET_NOT_EXIST(
