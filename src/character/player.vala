@@ -25,7 +25,7 @@ namespace Carol.Character.Player {
 
         public int health { get; set; default = 100; }
         public bool is_dead { get { return health <= 0; } }
-        private Vector2 position { get; private set; default = Vector2(100, 100); }
+        public Vector2 position { get; private set; default = Vector2(100, 100); }
         private Vector2 velocity {
             get;
             private set;

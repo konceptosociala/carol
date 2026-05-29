@@ -1,0 +1,3 @@
+[submodule "libs/tmx"]
+	path = libs/tmx
+	url = https://github.com/baylej/tmx/

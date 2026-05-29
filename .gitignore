@@ -5,5 +5,3 @@ builddir/
 release/
 run.sh
 release.sh
-
-*.c
