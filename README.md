@@ -1,13 +1,11 @@
+## Dependencies
+- libgee-devel
+
 ## Run
-
 ```sh
+git clone --recursive https://github.com/konceptosociala/carol.git
+cd carol
 meson setup build --wipe
-```
-
-```sh
 meson compile -C build
-```
-
-```sh
 ./build/carol
 ```
