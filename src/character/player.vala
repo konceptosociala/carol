@@ -17,10 +17,10 @@ namespace Carol.Character.Player {
     }
 
     public class Player : Object {
-        public const float HITBOX_OFFSET_X = 18f;
-        public const float HITBOX_OFFSET_Y = 0f;
+        public const float HITBOX_OFFSET_X = 50f;
+        public const float HITBOX_OFFSET_Y = 100f;
         public const float HITBOX_WIDTH = 28f;
-        public const float HITBOX_HEIGHT = 20f;
+        public const float HITBOX_HEIGHT = 30f;
         public const float SPEED = 100f;
 
         public int health { get; set; default = 100; }
